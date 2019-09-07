@@ -1,84 +1,92 @@
-from tkinter import *
+# gui.py
 
-# creating basic window
-window = Tk()
-window.geometry("312x324") # size of the window width:- 500, height:- 375
-window.resizable(0, 0) # this prevents from resizing the window
-window.title("Calcualtor")
+import os
+import cv2 as cv
+import numpy as np 
+from matplotlib import pyplot as plt
+from preprocess import SimulateImg
+from draw import DrawImg
+import tkinter as tk
+
+class GUI():
+    def __init__(self):
+        self.window = tk.Tk()
+        self.count = 0
+        self.name = "./monitor_pic/" + str(self.count) + ".png"
+        self.img = tk.PhotoImage(file = self.name)
+        self.label_img = tk.Label(self.window, image = self.img)
+        """
+        img = tk.PhotoImage(file = filename)
+        label_img = tk.Label(self.window, image = img)
+        label_img.pack()
+        self.window.mainloop()
+        """
+    
+    def setting(self):
+        self.window.title('simulate image')
+        self.window.resizable(False, False)    # fix size of window
+        windowWidth = 800               # width of window
+        windowHeight = 500              # height of window
+        screenWidth,screenHeight = self.window.maxsize()     # width and height of screen
+        geometryParam = '%dx%d+%d+%d'%(windowWidth, windowHeight, (screenWidth-windowWidth)/2, (screenHeight - windowHeight)/2)
+        self.window.geometry(geometryParam)     # set size and cordinate
+        self.window.wm_attributes('-topmost',1) # window to the top
+        
+        # label scripts
+        label_text = tk.Label(self.window, text = 'simulating process')
+        label_text.pack()
+        
+        # label image
+        #img = tk.PhotoImage(file = self.name)
+        #label_img = tk.Label(self.window, image = self.img)
+        button_previous = tk.Button(self.window, text="previous", command = self.function_previous).pack() # .pack(side="left")
+        button_next = tk.Button(self.window, text="next", command = self.function_next).pack()
+        self.label_img.pack()
+
+        #frame1 = tk.Frame(illustration)
+        
+        #frame2 = tk.Frame(illustration)
+        #frame3 = tk.Frame(illustration)
+        #button_next = tk.Button(illustration, text="next", command=callback)
+        #button_next.pack()
+        self.window.mainloop()
+
+    def function_next(self):
+        # label scripts
+        self.label_img.destroy()
+        print ("ok")
+        print ("count: ", self.count)
+        self.count += 1
+        # label image
+        filename = "./monitor_pic/" + str(self.count) + ".png"
+        print ("filename: ", filename)
+        
+        self.img = tk.PhotoImage(file = filename)
+        self.label_img = tk.Label(self.window, image = self.img)
+        self.label_img.pack()
+        self.window.mainloop()
+
+    def function_previous(self):
+        # label scripts
+        self.label_img.destroy()
+        print ("count: ", self.count)
+        self.count -= 1
+        # label image
+        filename = "./monitor_pic/" + str(self.count) + ".png"
+        print ("filename: ", filename)
+        
+        self.img = tk.PhotoImage(file = filename)
+        self.label_img = tk.Label(self.window, image = self.img)
+        self.label_img.pack()
+        self.window.mainloop()
+        
 
 
-################################### functions ######################################
-# 'btn_click' function continuously updates the input field whenever you enters a number
-def btn_click(item):
-    global expression
-    expression = expression + str(item)
-    input_text.set(expression)
-
-# 'btn_clear' function clears the input field
-def btn_clear():
-    global expression
-    expression = ""
-    input_text.set("")
-
-# 'btn_equal' calculates the expression present in input field
-def btn_equal():
-    global expression
-    result = str(eval(expression)) # 'eval' function evalutes the string expression directly
-    # you can also implement your own function to evalute the expression istead of 'eval' function
-    input_text.set(result)
-    expression = ""
-
-expression = ""
-# 'StringVar()' is used to get the instance of input field
-input_text = StringVar()
+if __name__ == "__main__":
+    K = 6
+    gui = GUI()
+    count = 0
+    gui.setting()
 
 
-# creating a frame for the input field
-input_frame = Frame(window, width = 312, height = 50, bd = 0, highlightbackground = "black", highlightcolor = "black", highlightthickness = 1)
-input_frame.pack(side = TOP)
 
-
-# creating a input field inside the 'Frame'
-input_field = Entry(input_frame, font = ('arial', 18, 'bold'), textvariable = input_text, width = 50, bg = "#eee", bd = 0, justify = RIGHT)
-input_field.grid(row = 0, column = 0)
-input_field.pack(ipady = 10) # 'ipady' is internal padding to increase the height of input field
-
-
-# creating another 'Frame' for the button below the 'input_frame'
-btns_frame = Frame(window, width = 312, height = 272.5, bg = "grey")
-btns_frame.pack()
-
-
-# first row
-clear = Button(btns_frame, text = "C", fg = "black", width = 32, height = 3, bd = 0, bg = "#eee", cursor = "hand2", command = lambda: btn_clear()).grid(row = 0, column = 0, columnspan = 3, padx = 1, pady = 1)
-divide = Button(btns_frame, text = "/", fg = "black", width = 10, height = 3, bd = 0, bg = "#eee", cursor = "hand2", command = lambda: btn_click("/")).grid(row = 0, column = 3, padx = 1, pady = 1)
-
-
-# second row
-seven = Button(btns_frame, text = "7", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(7)).grid(row = 1, column = 0, padx = 1, pady = 1)
-eight = Button(btns_frame, text = "8", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(8)).grid(row = 1, column = 1, padx = 1, pady = 1)
-nine = Button(btns_frame, text = "9", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(9)).grid(row = 1, column = 2, padx = 1, pady = 1)
-multiply = Button(btns_frame, text = "*", fg = "black", width = 10, height = 3, bd = 0, bg = "#eee", cursor = "hand2", command = lambda: btn_click("*")).grid(row = 1, column = 3, padx = 1, pady = 1)
-
-
-# third row
-four = Button(btns_frame, text = "4", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(4)).grid(row = 2, column = 0, padx = 1, pady = 1)
-five = Button(btns_frame, text = "5", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(5)).grid(row = 2, column = 1, padx = 1, pady = 1)
-six = Button(btns_frame, text = "6", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(6)).grid(row = 2, column = 2, padx = 1, pady = 1)
-minus = Button(btns_frame, text = "-", fg = "black", width = 10, height = 3, bd = 0, bg = "#eee", cursor = "hand2", command = lambda: btn_click("-")).grid(row = 2, column = 3, padx = 1, pady = 1)
-
-
-# fourth row
-one = Button(btns_frame, text = "1", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(1)).grid(row = 3, column = 0, padx = 1, pady = 1)
-two = Button(btns_frame, text = "2", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(2)).grid(row = 3, column = 1, padx = 1, pady = 1)
-three = Button(btns_frame, text = "3", fg = "black", width = 10, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(3)).grid(row = 3, column = 2, padx = 1, pady = 1)
-plus = Button(btns_frame, text = "+", fg = "black", width = 10, height = 3, bd = 0, bg = "#eee", cursor = "hand2", command = lambda: btn_click("+")).grid(row = 3, column = 3, padx = 1, pady = 1)
-
-
-# fourth row
-zero = Button(btns_frame, text = "0", fg = "black", width = 21, height = 3, bd = 0, bg = "#fff", cursor = "hand2", command = lambda: btn_click(0)).grid(row = 4, column = 0, columnspan = 2, padx = 1, pady = 1)
-point = Button(btns_frame, text = ".", fg = "black", width = 10, height = 3, bd = 0, bg = "#eee", cursor = "hand2", command = lambda: btn_click(".")).grid(row = 4, column = 2, padx = 1, pady = 1)
-equals = Button(btns_frame, text = "=", fg = "black", width = 10, height = 3, bd = 0, bg = "#eee", cursor = "hand2", command = lambda: btn_equal()).grid(row = 4, column = 3, padx = 1, pady = 1)
-
-
-window.mainloop()
