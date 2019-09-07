@@ -1,49 +1,67 @@
 # gui.py
 
-
 import os
 import cv2 as cv
 import numpy as np 
 from matplotlib import pyplot as plt
-
 from preprocess import SimulateImg
 from draw import DrawImg
-
 import tkinter as tk
 
-root = tk.Tk()
-root.title('simulate image')
-root.resizable(False, False)    #固定窗口大小
-windowWidth = 800               #获得当前窗口宽
-windowHeight = 500              #获得当前窗口高
-screenWidth,screenHeight = root.maxsize()     #获得屏幕宽和高
-geometryParam = '%dx%d+%d+%d'%(windowWidth, windowHeight, (screenWidth-windowWidth)/2, (screenHeight - windowHeight)/2)
-root.geometry(geometryParam)    #设置窗口大小及偏移坐标
-root.wm_attributes('-topmost',1)#窗口置顶
- 
-#label文本
-label_text = tk.Label(root, text = 'simulating process')
-label_text.pack()
- 
-#label图片
-img = tk.PhotoImage(file = 'sunflower.png')
-label_img = tk.Label(root, image = img)
-label_img.pack()
-"""
+class GUI():
+    def __init__(self):
+        self.window = tk.Tk()
+    
+    def setting(self, filename):
+        self.window.title('simulate image')
+        self.window.resizable(False, False)    # fix size of window
+        windowWidth = 800               # width of window
+        windowHeight = 500              # height of window
+        screenWidth,screenHeight = self.window.maxsize()     # width and height of screen
+        geometryParam = '%dx%d+%d+%d'%(windowWidth, windowHeight, (screenWidth-windowWidth)/2, (screenHeight - windowHeight)/2)
+        self.window.geometry(geometryParam)     # set size and cordinate
+        self.window.wm_attributes('-topmost',1) # window to the top
+        
+        # label scripts
+        label_text = tk.Label(self.window, text = 'simulating process')
+        label_text.pack()
+        
+        # label image
+        img = tk.PhotoImage(file = filename)
+        label_img = tk.Label(self.window, image = img)
+        label_img.pack()
 
- 
-#带图button，image
-button_img_gif = tk.PhotoImage(file = 'button_gif.gif')
-button_img = tk.Button(root, image = button_img_gif, text = '带图按钮')
-button_img.pack()
- 
-#带图button，bitmap
-button_bitmap = tk.Button(root, bitmap = 'error', text = '带图按钮')
-button_bitmap.pack()
-"""
-root.mainloop()
+        #frame1 = tk.Frame(illustration)
+        button_previous = tk.Button(self.window, text="previous").pack() # .pack(side="left")
+        button_next = tk.Button(self.window, text="next").pack()
+        #frame2 = tk.Frame(illustration)
+        #frame3 = tk.Frame(illustration)
+        #button_next = tk.Button(illustration, text="next", command=callback)
+        #button_next.pack()
+        self.window.mainloop()
+
+    def function_next(self, count):
+        # label scripts
+        count += 1
+        label_text = tk.Label(self.window, text = 'simulating process')
+        label_text.pack()
+        # label image
+        filename = "./monitor_pic/" + str(count) + ".png"
+        img = tk.PhotoImage(file = filename)
+        label_img = tk.Label(self.window, image = img)
+        label_img.pack()
+        print ("finished.")
+        self.window.mainloop()
+    
 
 
+if __name__ == "__main__":
+    K = 6
+    gui = GUI()
+    count = 0
+    filename = "./monitor_pic/" + str(count) + ".png"
+    gui.setting(filename)
+    gui.function_next(count)
 
 
 

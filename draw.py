@@ -134,8 +134,14 @@ class DrawImg():
 def readcsv(filename):
     with open (filename, 'r', newline='') as csvfile:
         rows = csv.reader(csvfile)
+        count = 0
+
         for row in rows:
-            print (row)
+            if (count < 5):
+                print (row)
+            else:
+                break
+            count += 1
 
             
 
@@ -143,14 +149,14 @@ def readcsv(filename):
 
 if __name__ == "__main__":
     K = 6
-    preprocess = SimulateImg("sunflower.jpg", K)
+    preprocess = SimulateImg("sunflower.png", K)
     #preprocess.printf()
     preprocess.Kmeans() # get the k means img
     preprocess.ColorSequence()
     preprocess.Monitor()
     preprocess.printf()
-    drawpoints = DrawImg(preprocess.save_name, K, preprocess.sequence_color, 0.01)
-    drawpoints = DrawImg("K_6_sunflower.jpg", K, preprocess.sequence_color, 0.01)
+    #drawpoints = DrawImg(preprocess.save_name, K, preprocess.sequence_color, 0.4)
+    drawpoints = DrawImg("K_6_sunflower.png", K, preprocess.sequence_color, 0.4)
     drawpoints.CheckLine()
     try:
         line_point = drawpoints.DrawLine()
@@ -161,4 +167,4 @@ if __name__ == "__main__":
     except:
         pass
     drawpoints.GenSequence(line_point, single_point)
-    readcsv("./points/3_point.csv")
+    #readcsv("./points/3_point.csv")
