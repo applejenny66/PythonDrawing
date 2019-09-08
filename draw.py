@@ -97,7 +97,7 @@ class DrawImg():
                 filename = './points/' + str(i) + '_line.csv'
                 with open (filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile)
-                    writer.writerow([self.color_line[i][0], self.color_line[i][1], self.color_line[i][2]])
+                    writer.writerow(["r", "g", "b", self.color_line[i][0], self.color_line[i][1], self.color_line[i][2]])
                     for x in range(0, self.size[0]):
                         tmp_y = []
                         for y in range(0, self.size[1]):
@@ -111,8 +111,8 @@ class DrawImg():
                         else:
                             min_y = min(tmp_y)
                             max_y = max(tmp_y)
-                            writer.writerow([tmp_x, min_y])
-                            writer.writerow([tmp_x, max_y])
+                            writer.writerow([tmp_x, min_y, max_y])
+                            #writer.writerow([tmp_x, max_y])
         
         if (self.color_point == []):
             pass
@@ -122,7 +122,7 @@ class DrawImg():
                 filename = './points/' + str(i) + '_point.csv'
                 with open (filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile)
-                    writer.writerow([self.color_point[i][0], self.color_point[i][1], self.color_point[i][2]])
+                    writer.writerow(["r", "g", "b", self.color_point[i][0], self.color_point[i][1], self.color_point[i][2]])
                     for x in range(0, self.size[0]):
                         for y in range(0, self.size[1]):
                             if (single_points[x, y, i] == 1):
