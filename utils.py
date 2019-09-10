@@ -1,5 +1,6 @@
 # utils.py
 import os
+import shutil
 
 def jpgtopng(filename, savename):
     from PIL import Image
@@ -18,6 +19,13 @@ def readcsv(filename):
             else:
                 break
             count += 1
+
+def ClearALL():
+    dir_list = ['./monitor_fix', './sequence', './color_result', './fixpoint', './monitor_pic', \
+                './painting', './points', ]
+    for dir_name in dir_list:
+        shutil.rmtree(dir_name)  
+        os.mkdir(dir_name)
 
 if __name__ == "__main__":
     count = 0

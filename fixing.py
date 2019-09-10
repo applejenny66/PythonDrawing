@@ -15,14 +15,14 @@ class Fixing():
         self.img = cv.imread(name)
         self.K = K
         self.size = self.img.shape
-        self.brush_size = 5 # set as 5 (initial)
+        self.brush_size = 1 # set as 2 (initial)
         self.color_sequence = []
         self.tmp_img = np.zeros((self.size[0], self.size[1], 1))
         for i in range(0, self.size[0]):
             for j in range(0, self.size[1]):
-                self.tmp_img[i, j, 0] = self.tmp_img[i, j, 1] = self.tmp_img[i, j, 2] = -1
+                self.tmp_img[i, j, 0] = -1
     
-    def DrawStep(self, K):
+    def DrawStep(self):
         r = []
         g = []
         b = []
@@ -56,18 +56,48 @@ class Fixing():
                                     color_index = int(b_index) #(0, 1, 2, 3, 4, 5)
                 if (color_index != (-1)):
                     self.tmp_img[x, y, 0] = color_index
-        
-                            
-
-
-
-                
-
+                        
+    def Simulatefix(self):
+        for i in range(0, self.K):
+            color = self.color_sequence[i]
+            fix_array = np.zeros((self.size))
+            for x in range(0, self.size[0]):
+                for y in range(0, self.size[1]):
+                    if (self.tmp_img[x, y, 0] == i):
+                        fix_array[x, y, 0] = color[0]
+                        fix_array[x, y, 1] = color[1]
+                        fix_array[x, y, 2] = color[2]
+                    else:
+                        fix_array[x, y, 0] = fix_array[x, y, 1] = fix_array[x, y, 2] = 255
+            save_name = "./monitor_fix/" + str(i) + "_simulatefix.png"
+            cv.imwrite(save_name, fix_array)
 
     def brushsize(self):
-
         pass
     
+    def Painting(self, previous_imgname):
+        previous_array = cv.imread(previous_imgname)
+        for i in range(0, self.K):
+            for x in range(0, self.size[0]):
+                for y in range(0, self.size[1]):
+                    if (self.tmp_img[x, y, 0] == i):
+                        dev = self.brush_size
+                        ndev = (-1) * self.brush_size
+                        for m in range(ndev, dev):
+                            for n in range(ndev, dev):
+                                if (x+m < 0 or x+m > self.size[0]-1 or y+n < 0 or y+n > self.size[1]):
+                                    pass
+                                else:
+                                    previous_array[x+m, y+n, 0] = self.color_sequence[i][0]
+                                    previous_array[x+m, y+n, 1] = self.color_sequence[i][1]
+                                    previous_array[x+m, y+n, 2] = self.color_sequence[i][2]
+            save_name = "./fix_result/" + str(i) + "_fixdpainting.png"
+            cv.imwrite(save_name, previous_array)
+
+                                
+
+
+
     def printf(self):
         print ("size: ", self.size)
         print ("color sequence: ", self.color_sequence)
@@ -75,6 +105,8 @@ class Fixing():
 
 if __name__ == "__main__":
     K = 6
-    new = Fixing("./fixpoint/0_fix.png")
+    new = Fixing("./fixpoint/0_fix.png", K)
     new.DrawStep()
+    new.Simulatefix()
     new.printf()
+    new.Painting("./painting/5_paint.png")

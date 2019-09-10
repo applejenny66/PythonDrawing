@@ -24,14 +24,13 @@ def step1():
         line_point = drawpoints.DrawLine()
         print ("trying")
     except:
-        print ("exception")
-        pass
+        print ("no line points or there's problem for line points.")
     try:
         single_point = drawpoints.DrawPoints()
         print ("trying")
     except:
-        print ("exception")
-        pass
+        print ("no single point or there's prpblem for single points.")
+        
     drawpoints.GenSequence(line_point, single_point)
     #readcsv("./points/3_point.csv")
     
