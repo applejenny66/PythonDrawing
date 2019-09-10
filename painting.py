@@ -113,7 +113,8 @@ class Painting():
 
 
 if __name__ == "__main__":
-    new = Painting(6, (399, 600, 3))
+    K = 6
+    new = Painting(K, (399, 600, 3))
     filename = "./points/0_line.csv"
     new.readfile_line(filename)
     for i in range(0, 5):

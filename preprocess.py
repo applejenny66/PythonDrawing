@@ -30,8 +30,7 @@ class SimulateImg():
         self.K_img = res2
         #print (self.K_img.shape)
 
-    def ColorSequence(self):
-        # gen coloring sequence -> light to deep 
+    def ColorSequence(self):  # gen coloring sequence -> light to deep 
         # save each sequence color
         color_r = []
         color_g = []
@@ -133,7 +132,8 @@ class SimulateImg():
 
 
 if __name__ == "__main__":
-    new = SimulateImg("sunflower.png", 6)
+    K = 6
+    new = SimulateImg("sunflower.png", K)
     new.printf()
     new.Kmeans() # get the k means img
     new.ColorSequence()

@@ -15,28 +15,26 @@ import time
 
 def step1(filename, Kfilename, K, shape):
     ClearALL()
+
     Kprocess = SimulateImg(filename, K)
     Kprocess.Kmeans() # get the k means img
     Kprocess.ColorSequence()
-    
     Kprocess.Monitor()
     Kprocess.printf()
-    #drawpoints = DrawImg(preprocess.save_name, K, preprocess.sequence_color, 0.4)
-    drawpoints = DrawImg("K_6_sunflower.png", K, Kprocess.sequence_color, 0.4)
+
+    drawpoints = DrawImg(Kfilename, K, Kprocess.sequence_color, 0.4)
     drawpoints.CheckLine()
     try:
         line_point = drawpoints.DrawLine()
-        print ("trying")
+        print ("trying line")
     except:
         print ("no line points or there's problem for line points.")
     try:
         single_point = drawpoints.DrawPoints()
-        print ("trying")
+        print ("trying point")
     except:
         print ("no single point or there's prpblem for single points.")
-        
     line_file_number, point_file_number = drawpoints.GenSequence(line_point, single_point)
-    #readcsv("./points/3_point.csv")
 
     painting = Painting(K, shape)
     for i in range(0, line_file_number):
@@ -46,13 +44,12 @@ def step1(filename, Kfilename, K, shape):
         point_file_name = "./points/" + str(j) + "_point.csv"
         count = painting.readfile_points(point_file_name)
     total_count = count - line_count
-    time.sleep(0.5)
     final_painting_name = "./painting/" + str(total_count) + "_paint.png"
     print ("final_painting_name: ", final_painting_name)
 
     filename = painting.DectectImg(Kfilename, final_painting_name)
     fixing = Fixing(filename, K)
-    fixing.DrawStep() #
+    fixing.DrawStep()
     fixing.Simulatefix()
     fixing.printf()
     fixing.Painting(final_painting_name)
