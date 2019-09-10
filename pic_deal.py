@@ -1,5 +1,5 @@
 # pic_deal.py
-# sunflower.jpg
+# sunflower.png
 
 import os
 import cv2 as cv
@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 symbol_color = np.zeros((100, 100, 3))
 name = "sunflower"
-filename = name + ".jpg"
+filename = name + ".png"
 img = cv.imread(filename)
 Z = img.reshape((-1,3))
 Z = np.float32(Z)
@@ -75,7 +75,7 @@ for i in range(0, len(total_list)):
     max_index = total_list.index(max_color)
     max_name = save_list[max_index]
     tmp_img = cv.imread(max_name)
-    save_name = "./sequence/" + str(count_) + ".jpg"
+    save_name = "./sequence/" + str(count_) + ".png"
     cv.imwrite(save_name, tmp_img)
     count_ += 1
     total_list.remove(max_color)
@@ -99,7 +99,7 @@ for m in range(0, size[0]):
             cover_img[m, n, p] = 255
 
 for i in range(1, 7):
-    sequence_name = "./sequence/" + str(i) + ".jpg"
+    sequence_name = "./sequence/" + str(i) + ".png"
     print (sequence_name)
     tmp_img = np.zeros(size)
     for m in range(0, size[0]):
@@ -117,9 +117,9 @@ for i in range(1, 7):
                         tmp_img[x, y] = tmp_color
                         cover_img[x, y] = tmp_color
 
-    save_name = "./monitor_pic/" + str(i) + ".jpg"
+    save_name = "./monitor_pic/" + str(i) + ".png"
     cv.imwrite(save_name, tmp_img)
-    save_name_2 = "./monitor_pic/" + str(i) + "_cover.jpg"
+    save_name_2 = "./monitor_pic/" + str(i) + "_cover.png"
     cv.imwrite(save_name_2, cover_img)
     
     

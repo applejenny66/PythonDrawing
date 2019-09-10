@@ -89,8 +89,8 @@ class DrawImg():
         if (self.color_line == []):
             pass
         else:
-            total_color_number = len(self.color_line)
-            for i in range(0, total_color_number):
+            total_line_number = len(self.color_line)
+            for i in range(0, total_line_number):
                 filename = './points/' + str(i) + '_line.csv'
                 with open (filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile)
@@ -114,8 +114,8 @@ class DrawImg():
         if (self.color_point == []):
             pass
         else:
-            total_color_number = len(self.color_point)
-            for i in range(0, total_color_number):
+            total_point_number = len(self.color_point)
+            for i in range(0, total_point_number):
                 filename = './points/' + str(i) + '_point.csv'
                 with open (filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile)
@@ -124,6 +124,7 @@ class DrawImg():
                         for y in range(0, self.size[1]):
                             if (single_points[x, y, i] == 1):
                                 writer.writerow([x, y])
+        return (total_line_number, total_point_number)
 
 
 

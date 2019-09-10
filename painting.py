@@ -57,6 +57,7 @@ class Painting():
         cv.imwrite(save_name, self.img)
         self.count += 1
         print ("save name: ", save_name)
+        return (self.count)
     
     def readfile_points(self, filename):
         self.brush_size = 3
@@ -86,6 +87,7 @@ class Painting():
         cv.imwrite(save_name, self.img)
         self.count += 1
         print ("save name: ", save_name)
+        return (self.count)
     
     def DectectImg(self, targetname, comparedname):
         targetimg = cv.imread(targetname)
@@ -107,6 +109,7 @@ class Painting():
         cv.imwrite(save_name, fiximg)
         print ("save name: ", save_name)
         self.fixcount += 1
+        return (save_name)
 
 
 if __name__ == "__main__":

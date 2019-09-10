@@ -1,5 +1,5 @@
 # preprocess.py
-# sunflower.jpg
+# sunflower.png
 
 import os
 import cv2 as cv
@@ -92,7 +92,7 @@ class SimulateImg():
                     symbol_color[m, n, 0] = r
                     symbol_color[m, n, 1] = g
                     symbol_color[m, n, 2] = b
-            save_name = "./sequence/" + str(i) + ".jpg"
+            save_name = "./sequence/" + str(i) + ".png"
             cv.imwrite(save_name, symbol_color)
             color_total.remove(lightest_color)
             color_r.remove(r)
@@ -121,7 +121,7 @@ class SimulateImg():
                                 monitor_img[j, k, 0] = self.sequence_color[i][0]
                                 monitor_img[j, k, 1] = self.sequence_color[i][1]
                                 monitor_img[j, k, 2] = self.sequence_color[i][2]
-            save_name = "monitor_pic/" + str(i) + ".jpg"
+            save_name = "monitor_pic/" + str(i) + ".png"
             cv.imwrite(save_name, monitor_img)
 
     def printf(self):
@@ -133,7 +133,7 @@ class SimulateImg():
 
 
 if __name__ == "__main__":
-    new = SimulateImg("sunflower.jpg", 6)
+    new = SimulateImg("sunflower.png", 6)
     new.printf()
     new.Kmeans() # get the k means img
     new.ColorSequence()
