@@ -11,10 +11,11 @@ import csv
 
 class Painting():
     def __init__(self, K, shape):
-        self.radius = 5
+        #self.radius = 5
         self.K = K
         self.size = shape
         self.count = 0
+        self.fixcount = 0
         self.brush_size = 5
         self.img = np.zeros((self.size))
         for i in range(0, self.size[0]):
@@ -86,9 +87,26 @@ class Painting():
         self.count += 1
         print ("save name: ", save_name)
     
-    def detecting(self):
-        pass
+    def DectectImg(self, targetname, comparedname):
+        targetimg = cv.imread(targetname)
+        comparedimg = cv.imread(comparedname)
+        fiximg = np.zeros((self.size))
+        
+        for x in range(0, self.size[0]):
+            for y in range(0, self.size[1]):
+                if (targetimg[x, y, 0] == comparedimg[x, y, 0] and \
+                    targetimg[x, y, 1] == comparedimg[x, y, 1] and \
+                    targetimg[x, y, 2] == comparedimg[x, y, 2]):
+                    fiximg[x, y, 0] = fiximg[x, y, 1] = fiximg[x, y, 2] = 255
+                else:
+                    fiximg[x, y, 0] = targetimg[x, y, 0]
+                    fiximg[x, y, 1] = targetimg[x, y, 1]
+                    fiximg[x, y, 2] = targetimg[x, y, 2]
 
+        save_name = "./fixpoint/" + str(self.fixcount) + "_fix.png"
+        cv.imwrite(save_name, fiximg)
+        print ("save name: ", save_name)
+        self.fixcount += 1
 
 
 if __name__ == "__main__":
@@ -98,3 +116,4 @@ if __name__ == "__main__":
     for i in range(0, 5):
         filename = "./points/" + str(i) + "_point.csv"
         new.readfile_points(filename)
+    new.DectectImg("K_6_sunflower.png", "./painting/5_paint.png")

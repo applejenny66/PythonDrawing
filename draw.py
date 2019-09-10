@@ -65,9 +65,6 @@ class DrawImg():
             return (Points)
 
     def DrawPoints(self): 
-        ############################################ problems
-        ############################## only color cluster 3 (out of 4) with points 50. others are 0.
-
         self.color_point = [color for color in self.sequence_color if color not in self.color_line]
         if (self.color_point == []):
             print ("there's no single point.")

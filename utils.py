@@ -21,8 +21,8 @@ def readcsv(filename):
 
 if __name__ == "__main__":
     count = 0
-    for name in os.listdir("./monitor_pic/"):
-        filename = "./monitor_pic/" + name
+    for name in os.listdir("./sequence/"):
+        filename = "./sequence/" + name
         save_name = filename.replace('jpg', 'png')
         jpgtopng(filename, save_name)
         count += 1
