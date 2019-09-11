@@ -93,6 +93,8 @@ class SimulateImg():
                     symbol_color[m, n, 2] = b
             save_name = "./sequence/" + str(i) + ".png"
             cv.imwrite(save_name, symbol_color)
+            save_name = "./color_result/" + str(r) + "_" + str(g) + "_" + str(b) + ".png"
+            cv.imwrite(save_name, symbol_color)
             color_total.remove(lightest_color)
             color_r.remove(r)
             color_g.remove(g)

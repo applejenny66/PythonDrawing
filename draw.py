@@ -87,7 +87,7 @@ class DrawImg():
 
     def GenSequence(self, line_points, single_points):
         if (self.color_line == []):
-            pass
+            total_line_number = 0
         else:
             total_line_number = len(self.color_line)
             for i in range(0, total_line_number):
@@ -112,7 +112,7 @@ class DrawImg():
                             #writer.writerow([tmp_x, max_y])
         
         if (self.color_point == []):
-            pass
+            total_point_number = 0
         else:
             total_point_number = len(self.color_point)
             for i in range(0, total_point_number):

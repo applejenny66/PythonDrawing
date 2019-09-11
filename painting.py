@@ -92,6 +92,8 @@ class Painting():
     def DectectImg(self, targetname, comparedname):
         targetimg = cv.imread(targetname)
         comparedimg = cv.imread(comparedname)
+        print (type(targetimg))
+        print (type(comparedimg))
         fiximg = np.zeros((self.size))
         
         for x in range(0, self.size[0]):
