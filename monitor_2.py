@@ -9,12 +9,12 @@ from preprocess import Kmeans
 
 
 class Monitor():
-    def __init__(self, name, K, sorted_sequence_color, pa):
+    def __init__(self, name, K, sequence_color, pa):
         self.name = name
         self.img = cv.imread(name)
         self.K = K
         self.size = self.img.shape
-        self.sequence_color = sorted_sequence_color
+        self.sequence_color = sequence_color
         self.pa = pa
         self.total_area = self.size[0] * self.size[1]
         self.threshold = self.pa * self.total_area
@@ -24,6 +24,8 @@ class Monitor():
     
     #def LoadColor(self):
         
+
+    #def Sort
 
     def CheckLine(self):
         print ("threshold: ", self.threshold)
@@ -76,7 +78,6 @@ class Monitor():
             return (Points)
 
     def DrawPoints(self): 
-        # use self.sequence_color to fix
         self.color_point = [color for color in self.sequence_color if color not in self.color_line]
         if (self.color_point == []):
             print ("there's no single point.")
@@ -168,11 +169,10 @@ if __name__ == "__main__":
     preprocess = Kmeans("1_2.png", K)
     preprocess.Kimg() # get the k means img
     sequence_color = preprocess.ColorSequence()
-    #print ("sequence color length: ", len(sequence_color))
-    sorted_sequence_color = preprocess.SortColor()
+    print ("sequence color length: ", len(sequence_color))
     #preprocess.printf()
     #drawpoints = Monitor(preprocess.save_name, K, preprocess.sequence_color, 0.4)
-    simulation = Monitor("K_298_1_2.png", K, sorted_sequence_color, 0.4)
+    simulation = Monitor("K_298_1_2.png", K, sequence_color, 0.4)
     simulation.CheckLine()
     try:
         line_point = drawpoints.DrawLine()

@@ -6,7 +6,7 @@ import cv2 as cv
 import numpy as np 
 from matplotlib import pyplot as plt
 from utils import GenColorImg
-
+import operator
 
 class Kmeans():
     def __init__(self, name, K):
@@ -100,6 +100,23 @@ class Kmeans():
         return (self.sequence_color)
         
 
+    def SortColor(self):
+        total_list = []
+        for i in range(0, len(self.sequence_color)):
+            tmp_total = 0
+            tmp_color = []
+            tmp_list = []
+            for j in range(0, 3):
+                tmp = int(self.sequence_color[i][j]) * int(self.sequence_color[i][j])
+                tmp_total += tmp
+                tmp_color.append(self.sequence_color[i][j])
+            tmp_list.append(tmp_color)
+            tmp_list.append(tmp_total)
+            total_list.append(tmp_list)
+        #print ("total list: ", total_list)
+        sorted_sequence_color = sorted(total_list, key=operator.itemgetter(1))
+        #print ("sorted sequence color: ", sorted_sequence_color)
+        return (sorted_sequence_color)
 
 
     def printf(self):
@@ -113,8 +130,9 @@ if __name__ == "__main__":
     new = Kmeans("1_2.png", K)
     new.Kimg() # get the k means img
     sequence_color = new.ColorSequence()
-    print ("sequence color: ", sequence_color)
-    print ("length of sequence color: ", len(sequence_color))
+    sorted_sequence_color = new.SortColor()
+    print ("sorted sequence color: ", sorted_sequence_color)
+    print ("length of sequence color: ", len(sorted_sequence_color))
     new.printf()
     
 
