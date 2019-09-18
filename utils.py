@@ -2,6 +2,7 @@
 import os
 import shutil
 import cv2 as cv
+import numpy as np
 
 
 def jpgtopng(filename, savename):
@@ -24,10 +25,18 @@ def readcsv(filename):
 
 def ClearALL():
     dir_list = ['./monitor_fix', './sequence', './color_result', './fixpoint', './monitor_pic', \
-                './painting', './points', './fix_result', "./patch"]
+                './painting', './points', './fix_result', "./patch", "./all_color/r_type", \
+                "./all_color/g_type", "./all_color/b_type"]
     for dir_name in dir_list:
         shutil.rmtree(dir_name)  
         os.mkdir(dir_name)
+
+def RemoveRedundant(rlist):
+    tidy_list = []
+    for i in range(0, len(rlist)):
+        tmp_element = rlist[i][0]
+        tidy_list.append(tmp_element)
+    return (tidy_list)
 
 def colornumber(filename):
     r = []
@@ -55,11 +64,38 @@ def colornumber(filename):
                         r.append(tmp_r)
                         g.append(tmp_g)
                         b.append(tmp_b)
-    count = len(r)
+    count = len(r) # number of total color
     for i in range(0, count):
         color.append((r[i], g[i], b[i]))
     return (count, r, g, b, color)
                 
+def GenColorImg(color, savename):
+    #length = len(colorlist)
+    #for i in range(0, len(colorlist)):
+    img = np.zeros((100, 100, 3))
+    for x in range(0, 100):
+        for y in range(0, 100):
+            img[x, y, 0] = color[0]
+            img[x, y, 1] = color[1]
+            img[x, y, 2] = color[2]
+    cv.imwrite(savename, img)
+
+def GenMonitorImg(img, colorlist, size, savename):
+    for i in range(0, len(colorlist)):
+        for x in range(0, size[0]):
+            for y in range(0, size[1]):
+                img[x, y, 0] = colorlist[i][0]
+                img[x, y, 1] = colorlist[i][1]
+                img[x, y, 2] = colorlist[i][2]
+        cv.imwrite(savename, img)
+
+
+def BlankImg(size):
+    img = np.zeros((size[0], size[1], size[2]))
+    for x in range(0, size[0]):
+        for y in range(0, size[1]):
+            img[x, y, 0] = img[x, y, 1] = img[x, y, 2] = 255
+    return (img)
 
 if __name__ == "__main__":
     """

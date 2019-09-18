@@ -4,8 +4,8 @@ import os
 import cv2 as cv
 import numpy as np 
 from matplotlib import pyplot as plt
-from preprocess import SimulateImg
-from draw import DrawImg
+from preprocess import Kmeans
+from monitor import Monitor
 import tkinter as tk
 import csv
 

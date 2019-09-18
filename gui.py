@@ -4,15 +4,17 @@ import os
 import cv2 as cv
 import numpy as np 
 from matplotlib import pyplot as plt
-from preprocess import SimulateImg
-from draw import DrawImg
+from preprocess import Kmeans
+from monitor import Monitor
 import tkinter as tk
 
 class GUI():
-    def __init__(self):
+    def __init__(self, dir, tail):
         self.window = tk.Tk()
         self.count = 0
-        self.name = "./monitor_pic/" + str(self.count) + ".png"
+        self.dir = dir
+        self.tail = tail
+        self.name = self.dir + str(self.count) + str(self.tail)
         self.img = tk.PhotoImage(file = self.name)
         self.label_img = tk.Label(self.window, image = self.img)
     
@@ -52,7 +54,7 @@ class GUI():
         print ("count: ", self.count)
         self.count += 1
         # label image
-        filename = "./monitor_pic/" + str(self.count) + ".png"
+        filename = self.dir + str(self.count) + str(self.tail)
         print ("filename: ", filename)
         
         self.img = tk.PhotoImage(file = filename)
@@ -66,7 +68,7 @@ class GUI():
         print ("count: ", self.count)
         self.count -= 1
         # label image
-        filename = "./monitor_pic/" + str(self.count) + ".png"
+        filename = self.dir + str(self.count) + str(self.tail)
         print ("filename: ", filename)
         
         self.img = tk.PhotoImage(file = filename)
@@ -78,8 +80,9 @@ class GUI():
 
 if __name__ == "__main__":
     K = 6
-    gui = GUI()
-    count = 0
+    dir_name = "./painting/"
+    tail_name = "_paint.png"
+    gui = GUI(dir_name, tail_name)
     gui.setting()
 
 

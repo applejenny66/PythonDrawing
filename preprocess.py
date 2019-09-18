@@ -5,8 +5,10 @@ import os
 import cv2 as cv
 import numpy as np 
 from matplotlib import pyplot as plt
+from utils import GenColorImg
 
-class SimulateImg():
+
+class Kmeans():
     def __init__(self, name, K):
         self.name = name
         self.K = K
@@ -14,7 +16,7 @@ class SimulateImg():
         self.size = self.img.shape
         self.sequence_color = []
 
-    def Kmeans(self):
+    def Kimg(self):
         # gen k means img (res2) and save img
         Z = self.img.reshape((-1,3))
         Z = np.float32(Z)
@@ -28,6 +30,7 @@ class SimulateImg():
         self.save_name = save_name
         cv.imwrite(save_name, res2)
         self.K_img = res2
+        print ("K img generated.")
         #print (self.K_img.shape)
 
     def ColorSequence(self):  # gen coloring sequence -> light to deep 
@@ -35,6 +38,7 @@ class SimulateImg():
         color_r = []
         color_g = []
         color_b = []
+        color = []
         color_total = []
         #save k number of color in k means img
         for x in range(0, self.size[0]):
@@ -46,6 +50,8 @@ class SimulateImg():
                     color_r.append(tmp_r)
                     color_b.append(tmp_b)
                     color_g.append(tmp_g)
+                    tmp_color = (tmp_r, tmp_g, tmp_b)
+                    color.append(tmp_color)
                     tmp_total = int(tmp_r) + int(tmp_g) + int(tmp_b)
                     color_total.append(tmp_total)
                 else:
@@ -53,6 +59,8 @@ class SimulateImg():
                         color_r.append(tmp_r)
                         color_b.append(tmp_b)
                         color_g.append(tmp_g)
+                        tmp_color = (tmp_r, tmp_g, tmp_b)
+                        color.append(tmp_color)
                         tmp_total = int(tmp_r) + int(tmp_g) + int(tmp_b)
                         color_total.append(tmp_total)
                     else:
@@ -60,87 +68,53 @@ class SimulateImg():
                             color_r.append(tmp_r)
                             color_b.append(tmp_b)
                             color_g.append(tmp_g)
+                            tmp_color = (tmp_r, tmp_g, tmp_b)
+                            color.append(tmp_color)
                             tmp_total = int(tmp_r) + int(tmp_g) + int(tmp_b)
                             color_total.append(tmp_total)
                         else:
-                            tmp_r_index = color_r.index(tmp_r)
-                            tmp_g_index = color_g.index(tmp_g)
-                            tmp_b_index = color_b.index(tmp_b)
-                            if (tmp_r_index == tmp_g_index == tmp_b_index):
-                                pass
-                            else:
+                            tmp_color = (tmp_r, tmp_g, tmp_b)
+                            if (tmp_color not in color):
                                 color_r.append(tmp_r)
-                                color_b.append(tmp_b)
                                 color_g.append(tmp_g)
+                                color_b.append(tmp_b)
+                                color.append(tmp_color)
                                 tmp_total = int(tmp_r) + int(tmp_g) + int(tmp_b)
                                 color_total.append(tmp_total)
-        #print ("r color: ", color_r)
-        #print ("g color: ", color_g)
-        #print ("b color: ", color_b)
-        #print ("total color: ", color_total)
         
         for i in range(0, self.K):
-            symbol_color = np.zeros((100, 100, 3))
             lightest_color = max(color_total)
             lightest_index = color_total.index(lightest_color)
             r, g, b = color_r[lightest_index], color_g[lightest_index], color_b[lightest_index]
-            print (r, g, b)
             self.sequence_color.append((r, g, b))
-            for m in range(0, 100):
-                for n in range(0, 100):
-                    symbol_color[m, n, 0] = r
-                    symbol_color[m, n, 1] = g
-                    symbol_color[m, n, 2] = b
+            save_color = [r, g, b]
             save_name = "./sequence/" + str(i) + ".png"
-            cv.imwrite(save_name, symbol_color)
+            GenColorImg(save_color, save_name)
             save_name = "./color_result/" + str(r) + "_" + str(g) + "_" + str(b) + ".png"
-            cv.imwrite(save_name, symbol_color)
+            GenColorImg(save_color, save_name)
             color_total.remove(lightest_color)
             color_r.remove(r)
             color_g.remove(g)
             color_b.remove(b)
-            #print (color_r)
-            #print (color_g)
-            #print (color_b)
-        #self.sequence_color = sequence_color
-        print ("sequence color: ", self.sequence_color)
 
-    def Monitor(self):
-        monitor_img = np.zeros(self.size)
-        # black array to white
-        for x in range(0, self.size[0]):
-            for y in range(0, self.size[1]):
-                monitor_img[x, y, 0] = monitor_img[x, y, 1] = monitor_img[x, y, 2] = 255
-        # simulate coloring step by step
-        for i in range(0, self.K):
-            for j in range(0, self.size[0]):
-                for k in range(0, self.size[1]):
-                    #print (i, j, k)
-                    if (self.K_img[j, k, 0] == self.sequence_color[i][0]):
-                        if (self.K_img[j, k, 1] == self.sequence_color[i][1]):
-                            if (self.K_img[j, k, 2] == self.sequence_color[i][2]):
-                                monitor_img[j, k, 0] = self.sequence_color[i][0]
-                                monitor_img[j, k, 1] = self.sequence_color[i][1]
-                                monitor_img[j, k, 2] = self.sequence_color[i][2]
-            save_name = "monitor_pic/" + str(i) + ".png"
-            cv.imwrite(save_name, monitor_img)
+        return (self.sequence_color)
+        
+
+
 
     def printf(self):
         print ("img name: ", self.name)
         print ("K means: ", self.K)
         print ("shape: ", self.size)
-    def DrawPoints(self):
-        pass
 
 
 if __name__ == "__main__":
-    K = 6
-    new = SimulateImg("sunflower.png", K)
-    new.printf()
-    new.Kmeans() # get the k means img
-    new.ColorSequence()
-    
-    new.Monitor()
+    K = 298
+    new = Kmeans("1_2.png", K)
+    new.Kimg() # get the k means img
+    sequence_color = new.ColorSequence()
+    print ("sequence color: ", sequence_color)
+    print ("length of sequence color: ", len(sequence_color))
     new.printf()
     
 
