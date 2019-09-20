@@ -6,15 +6,15 @@ import numpy as np
 from matplotlib import pyplot as plt
 import csv
 from preprocess import Kmeans
-
+from utils import RemoveRedundant, BlankImg
 
 class Monitor():
-    def __init__(self, name, K, sequence_color, pa):
+    def __init__(self, name, K, sorted_sequence_color, pa):
         self.name = name
-        self.img = cv.imread(name)
+        self.img = cv.imread(self.name)
         self.K = K
         self.size = self.img.shape
-        self.sequence_color = sequence_color
+        self.sequence_color = sorted_sequence_color
         self.pa = pa
         self.total_area = self.size[0] * self.size[1]
         self.threshold = self.pa * self.total_area
@@ -22,146 +22,104 @@ class Monitor():
         self.color_line = [] # r, g, b color
         self.color_point = [] # r, g, b color
     
-    #def LoadColor(self):
-        
 
-    #def Sort
-
-    def CheckLine(self):
-        print ("threshold: ", self.threshold)
-        tmp_count_array = np.zeros((self.K))
+    def GenPoints(self):
+        point_array = np.zeros((self.size[0], self.size[1], 1))
+        set_sequence_list = []
+        for i in range(0, len(self.sequence_color)):
+            tmp = set(self.sequence_color[i])
+            set_sequence_list.append(tmp)
+        count = 0
         for x in range(0, self.size[0]):
             for y in range(0, self.size[1]):
-                tmp_point_color = tuple(self.img[x, y])
-                #print (tmp_point_color)
-                #print (type(tmp_point_color))
-                if (tmp_point_color in self.sequence_color):
-                    tmp_index = self.sequence_color.index(tmp_point_color)
-                    tmp_count_array[tmp_index] += 1
-
-
-                
-        print ("finished.")
-        for x in range(0, self.K):
-            if (tmp_count_array[x] != 0):
-                print (tmp_count_array[x])
-                
-            #print ("percentage of total area: ", count/self.total_area)
-            
-        #if (count >= self.threshold):
-        #    self.color_line.append(self.sequence_color[i])
-        #if (self.color_line != []):
-        #    self.line = True
-            #return (color_line)
-        #else:
-        #    print ("There's no area over threshold.")
-        #print ("count: ", count)
-
-    def DrawLine(self):
-        if (self.line == False):
-            pass
-        else:
-            color_number = len(self.color_line)
-            print ("line's color number: ", color_number)
-            Points = np.zeros((self.size[0], self.size[1], color_number))
-            for i in range(0, color_number):
-                count = 0
-                for x in range(0, self.size[0]):
-                    for y in range(0, self.size[1]):
-                        if (self.img[x, y, 0] == self.color_line[i][0] and \
-                            self.img[x, y, 1] == self.color_line[i][1] and \
-                            self.img[x, y, 2] == self.color_line[i][2]):
-                            Points[x, y, i] = 1
-                            count += 1
-                words = str(i) + " lines number:"
-                print (words, count)
-            return (Points)
-
-    def DrawPoints(self): 
-        self.color_point = [color for color in self.sequence_color if color not in self.color_line]
-        if (self.color_point == []):
-            print ("there's no single point.")
-        else:
-            color_number = len(self.color_point)
-            print ("point's color number: ", color_number)
-            Points = np.zeros((self.size[0], self.size[1], color_number))
-            for i in range(0, color_number):
-                count = 0
-                for x in range(0, self.size[0]):
-                    for y in range(0, self.size[1]):
-                        if (int(self.img[x, y, 0]) == int(self.color_point[i][0]) and \
-                            int(self.img[x, y, 1]) == int(self.color_point[i][1]) and \
-                            int(self.img[x, y, 2]) == int(self.color_point[i][2])):
-                            Points[x, y, i] = 1
-                            count += 1
-                words = str(i) + " points number:"
-                print (words, count)
-            return (Points)
-
-    def GenSequence(self, line_points, single_points):
-        if (self.color_line == []):
-            total_line_number = 0
-        else:
-            total_line_number = len(self.color_line)
-            for i in range(0, total_line_number):
-                filename = './points/' + str(i) + '_line.csv'
-                with open (filename, 'w', newline='') as csvfile:
-                    writer = csv.writer(csvfile)
-                    writer.writerow(["r", "g", "b", self.color_line[i][0], self.color_line[i][1], self.color_line[i][2]])
-                    for x in range(0, self.size[0]):
-                        tmp_y = []
-                        for y in range(0, self.size[1]):
-                            if (line_points[x, y, i] == 1):
-                                tmp_x = x
-                                tmp_y.append(y)
-                        if (len(tmp_y) == 0):
-                            pass
-                        elif (len(tmp_y) == 1):
-                            writer.writerow([tmp_x, tmp_y[0]])
-                        else:
-                            min_y = min(tmp_y)
-                            max_y = max(tmp_y)
-                            writer.writerow([tmp_x, min_y, max_y])
-                            #writer.writerow([tmp_x, max_y])
-        
-        if (self.color_point == []):
-            total_point_number = 0
-        else:
-            total_point_number = len(self.color_point)
-            for i in range(0, total_point_number):
-                filename = './points/' + str(i) + '_point.csv'
-                with open (filename, 'w', newline='') as csvfile:
-                    writer = csv.writer(csvfile)
-                    writer.writerow(["r", "g", "b", self.color_point[i][0], self.color_point[i][1], self.color_point[i][2]])
-                    for x in range(0, self.size[0]):
-                        for y in range(0, self.size[1]):
-                            if (single_points[x, y, i] == 1):
-                                writer.writerow([x, y])
-        return (total_line_number, total_point_number)
-
-    """
-    def Monitor(self):
-        monitor_img = np.zeros(self.size)
-        # black array to white
-        for x in range(0, self.size[0]):
-            for y in range(0, self.size[1]):
-                monitor_img[x, y, 0] = monitor_img[x, y, 1] = monitor_img[x, y, 2] = 255
-        # simulate coloring step by step
+                #print ("x, y: ", x, y)
+                tmp_color = set(self.img[x, y])
+                #print (tmp_color)
+                if (tmp_color in set_sequence_list):  ############################
+                    tmp_index = set_sequence_list.index(tmp_color)
+                    point_array[x, y, 0] = int(tmp_index)
+                    count += 1
+                else:
+                    point_array[x, y] = int(-1)
+        print ("color number: ", count)   
         for i in range(0, self.K):
-            for j in range(0, self.size[0]):
-                for k in range(0, self.size[1]):
-                    #print (i, j, k)
-                    if (self.K_img[j, k, 0] == self.sequence_color[i][0]):
-                        if (self.K_img[j, k, 1] == self.sequence_color[i][1]):
-                            if (self.K_img[j, k, 2] == self.sequence_color[i][2]):
-                                monitor_img[j, k, 0] = self.sequence_color[i][0]
-                                monitor_img[j, k, 1] = self.sequence_color[i][1]
-                                monitor_img[j, k, 2] = self.sequence_color[i][2]
-            save_name = "monitor_pic/" + str(i) + ".png"
-            cv.imwrite(save_name, monitor_img)
+            filename = './points/' + str(i) + '_point.csv'
+            with open (filename, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(["r", "g", "b", self.sequence_color[i][0], self.sequence_color[i][1], self.sequence_color[i][2]])
+                #count = 0
+                for x in range(0, self.size[0]):
+                    for y in range(0, self.size[1]):
+                        if (int(point_array[x, y]) == int(i)):
+                            writer.writerow([x, y])
+                        elif (point_array[x, y] == -1):
+                            pass
+                            #count += 1
+                            #print ("there's some error.")
+
+    def SimulatedImg(self):
+        for i in range(0, self.K):
+            filename = './points/' + str(i) + '_point.csv'
+            img = BlankImg(self.size)
+            with open(filename, newline='') as csvfile:
+                rows = csv.reader(csvfile)
+                for row in rows:
+                    if (len(row) != 2):
+                        r, g, b = row[3], row[4], row[5]
+                    else:
+                        x = row[0]
+                        y = row[1]
+                        img[x, y, 0] = r
+                        img[x ,y ,1] = g
+                        img[x ,y, 2] = b
+                save_name = "./monitor_pic/" + str(i) + ".png"
+                cv.imwrite(save_name, img)
+                words = "finished " + str(i)
+                print (words)
+                     
+
     """
-
-
+    def GenPoints(self):
+        point_array = np.zeros((self.size[0], self.size[1]))
+        set_sequence_list = []
+        for i in range(0, len(self.sequence_color)):
+            tmp = set(self.sequence_color[i])
+            set_sequence_list.append(tmp)
+        print ("set sequence list: ", set_sequence_list)
+        print (type(set_sequence_list))
+        print ("size 1: ", self.size[1])
+        count = 0
+        for x in range(0, self.size[0]):
+            for y in range(0, self.size[1]):
+                #print ("x, y: ", x, y)
+                tmp_color = set(self.img[x, y])
+                #print (tmp_color)
+                if (tmp_color in set_sequence_list):  ############################
+                    tmp_index = set_sequence_list.index(tmp_color)
+                    point_array[x, y] = tmp_index
+                    count += 1
+                else:
+                    point_array[x, y] = -1
+        print ("color number: ", count)   
+        for i in range(0, self.K):
+            filename = './points/' + str(i) + '_point.csv'
+            with open (filename, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(["r", "g", "b", self.sequence_color[i][0], self.sequence_color[i][1], self.sequence_color[i][2]])
+                count = 0
+                for x in range(0, self.size[0]):
+                    for y in range(0, self.size[1]):
+                        if (int(point_array[x, y]) == int(i)):
+                            writer.writerow([x, y])
+                        elif (point_array[x, y] == -1):
+                            pass
+                            #count += 1
+                            #print ("there's some error.")
+    """
+    def showimg(self):
+        print ("self.name: ", self.name)
+        cv.imshow("1", self.img)
+        cv.waitKey(0)
 
 
 if __name__ == "__main__":
@@ -169,18 +127,12 @@ if __name__ == "__main__":
     preprocess = Kmeans("1_2.png", K)
     preprocess.Kimg() # get the k means img
     sequence_color = preprocess.ColorSequence()
-    print ("sequence color length: ", len(sequence_color))
+    #print ("sequence color length: ", len(sequence_color))
+    sorted_sequence_color = preprocess.SortColor()
+    sorted_sequence_color = RemoveRedundant(sorted_sequence_color)
     #preprocess.printf()
     #drawpoints = Monitor(preprocess.save_name, K, preprocess.sequence_color, 0.4)
-    simulation = Monitor("K_298_1_2.png", K, sequence_color, 0.4)
-    simulation.CheckLine()
-    try:
-        line_point = drawpoints.DrawLine()
-    except:
-        print ("there's error for line point.")
-    try:
-        single_point = drawpoints.DrawPoints()
-    except:
-        print ("there's error for single point.")
-    simulation.GenSequence(line_point, single_point)
-    #readcsv("./points/3_point.csv")
+    simulation = Monitor("K_298_1_2.png", K, sorted_sequence_color, 0.4)
+    #simulation.showimg()
+    simulation.GenPoints()
+    simulation.SimulatedImg()
