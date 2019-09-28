@@ -84,11 +84,6 @@ class Monitor():
                 print (words)
                      
 
-    def showimg(self):
-        print ("self.name: ", self.name)
-        cv.imshow("1", self.img)
-        cv.waitKey(0)
-
 
 if __name__ == "__main__":
     K = 298
