@@ -32,10 +32,11 @@ class Painting():
             with open(filename, newline='') as csvfile:
                 rows = csv.reader(csvfile)
                 for row in rows:
-                    print(row)
+                    #print(row)
                     if (len(row) != 2):
                         r, g, b = int(row[3]), int(row[4]), int(row[5])
                         self.color_list.append((r, g, b))
+                        print (r, g, b)
                     else:
                         x = int(row[0])
                         y = int(row[1])
@@ -76,35 +77,24 @@ class Painting():
         cv.imwrite(save_name, different_img)
         self.count += 1
 
+    def Fixing(self, filename):
+        img = cv.imread(filename)
+        for i in range(0, len(self.color_list)):
+            save_name = "./fixpoint/" + str(i) + ".csv"
+            with open(save_name, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([self.color_list[i][0], self.color_list[i][1], self.color_list[i][2]])
+                for x in range(0, self.size[0]):
+                    for y in range(0, self.size[1]):
+                        if (int(img[x, y, 0]) == int(self.color_list[i][0])):
+                            if (int(img[x, y, 1]) == int(self.color_list[i][1])):
+                                if (int(img[x, y, 2]) == int(self.color_list[i][2])):
+                                    writer.writerow([x, y])
 
 
 
 
-    """
-    def DectectImg(self, targetname, comparedname):
-        targetimg = cv.imread(targetname)
-        comparedimg = cv.imread(comparedname)
-        print (type(targetimg))
-        print (type(comparedimg))
-        fiximg = np.zeros((self.size))
-        
-        for x in range(0, self.size[0]):
-            for y in range(0, self.size[1]):
-                if (targetimg[x, y, 0] == comparedimg[x, y, 0] and \
-                    targetimg[x, y, 1] == comparedimg[x, y, 1] and \
-                    targetimg[x, y, 2] == comparedimg[x, y, 2]):
-                    fiximg[x, y, 0] = fiximg[x, y, 1] = fiximg[x, y, 2] = 255
-                else:
-                    fiximg[x, y, 0] = targetimg[x, y, 0]
-                    fiximg[x, y, 1] = targetimg[x, y, 1]
-                    fiximg[x, y, 2] = targetimg[x, y, 2]
 
-        save_name = "./fixpoint/" + str(self.fixcount) + "_fix.png"
-        cv.imwrite(save_name, fiximg)
-        print ("save name: ", save_name)
-        self.fixcount += 1
-        return (save_name)
-    """
 
 if __name__ == "__main__":
     K = 298
@@ -116,4 +106,5 @@ if __name__ == "__main__":
     color_list = new.Painting()
     comparename = "./painting/297.png"
     new.DectectImg(filename, comparename)
+    new.Fixing("./difference/0.png")
     print ("finished.")
