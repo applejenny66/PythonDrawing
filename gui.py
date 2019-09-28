@@ -4,21 +4,19 @@ import os
 import cv2 as cv
 import numpy as np 
 from matplotlib import pyplot as plt
-from preprocess import SimulateImg
-from draw import DrawImg
+from preprocess import Kmeans
+from monitor import Monitor
 import tkinter as tk
 
 class GUI():
-    def __init__(self):
+    def __init__(self, dir, tail):
         self.window = tk.Tk()
         self.count = 0
-        self.name = "./monitor_pic/" + str(self.count) + ".png"
-        """
-        img = tk.PhotoImage(file = filename)
-        label_img = tk.Label(self.window, image = img)
-        label_img.pack()
-        self.window.mainloop()
-        """
+        self.dir = dir
+        self.tail = tail
+        self.name = self.dir + str(self.count) + str(self.tail)
+        self.img = tk.PhotoImage(file = self.name)
+        self.label_img = tk.Label(self.window, image = self.img)
     
     def setting(self):
         self.window.title('simulate image')
@@ -35,13 +33,14 @@ class GUI():
         label_text.pack()
         
         # label image
-        img = tk.PhotoImage(file = self.name)
-        label_img = tk.Label(self.window, image = img)
-        label_img.pack()
+        #img = tk.PhotoImage(file = self.name)
+        #label_img = tk.Label(self.window, image = self.img)
+        button_previous = tk.Button(self.window, text="previous", command = self.function_previous).pack() # .pack(side="left")
+        button_next = tk.Button(self.window, text="next", command = self.function_next).pack()
+        self.label_img.pack()
 
         #frame1 = tk.Frame(illustration)
-        button_previous = tk.Button(self.window, text="previous", command = self.clear).pack() # .pack(side="left")
-        button_next = tk.Button(self.window, text="next", command = self.function_next).pack()
+        
         #frame2 = tk.Frame(illustration)
         #frame3 = tk.Frame(illustration)
         #button_next = tk.Button(illustration, text="next", command=callback)
@@ -50,38 +49,41 @@ class GUI():
 
     def function_next(self):
         # label scripts
-        
-        print ("ok")
-        
+        self.label_img.destroy()
+        #print ("ok")
         print ("count: ", self.count)
         self.count += 1
-        
-        label_text = tk.Label(self.window, text = 'simulating process')
-        label_text.pack()
         # label image
-        filename = "./monitor_pic/" + str(self.count) + ".png"
+        filename = self.dir + str(self.count) + str(self.tail)
         print ("filename: ", filename)
         
-        img = tk.PhotoImage(file = filename)
-        label_img = tk.Label(self.window, image = img)
-        label_img.pack()
+        self.img = tk.PhotoImage(file = filename)
+        self.label_img = tk.Label(self.window, image = self.img)
+        self.label_img.pack()
         self.window.mainloop()
-        print ("finished.")
+
+    def function_previous(self):
+        # label scripts
+        self.label_img.destroy()
+        print ("count: ", self.count)
+        self.count -= 1
+        # label image
+        filename = self.dir + str(self.count) + str(self.tail)
+        print ("filename: ", filename)
         
-    def clear(self):
-        list = self.window.grid_slaves()
-        for l in list:
-            l.destroy()
+        self.img = tk.PhotoImage(file = filename)
+        self.label_img = tk.Label(self.window, image = self.img)
+        self.label_img.pack()
+        self.window.mainloop()
+        
 
 
 if __name__ == "__main__":
     K = 6
-    gui = GUI()
-    
-    count = 0
-    #filename = "./monitor_pic/" + str(count) + ".png"
+    dir_name = "./painting/"
+    tail_name = "_paint.png"
+    gui = GUI(dir_name, tail_name)
     gui.setting()
-    #gui.function_next(count)
 
 
 

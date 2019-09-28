@@ -77,12 +77,16 @@ class SimulateImg():
                     symbol_color[m, n, 0] = r
                     symbol_color[m, n, 1] = g
                     symbol_color[m, n, 2] = b
-            save_name = "./sequence/" + str(i) + ".jpg"
+            save_name = "./sequence/" + str(i) + ".png"
             cv.imwrite(save_name, symbol_color)
-            color_total.remove(lightest_color)
-            color_r.remove(r)
-            color_g.remove(g)
-            color_b.remove(b)
+            del color_total[lightest_index]
+            del color_r[lightest_index]
+            del color_g[lightest_index]
+            del color_b[lightest_index]
+            #color_total.remove(lightest_color)
+            #color_r.remove(r)
+            #color_g.remove(g)
+            #color_b.remove(b)
             #print (color_r)
             #print (color_g)
             #print (color_b)
@@ -106,7 +110,7 @@ class SimulateImg():
                                 monitor_img[j, k, 0] = self.sequence_color[i][0]
                                 monitor_img[j, k, 1] = self.sequence_color[i][1]
                                 monitor_img[j, k, 2] = self.sequence_color[i][2]
-            save_name = "monitor_pic/" + str(i) + ".jpg"
+            save_name = "monitor_pic/" + str(i) + ".png"
             cv.imwrite(save_name, monitor_img)
 
     def printf(self):
@@ -117,7 +121,7 @@ class SimulateImg():
 
 
 if __name__ == "__main__":
-    new = SimulateImg("K_6_sunflower.jpg", 6)
+    new = SimulateImg("K_6_sunflower.png", 6)
     new.printf()
     new.ColorSequence()
     new.Monitor()
