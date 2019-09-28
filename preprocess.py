@@ -92,10 +92,14 @@ class Kmeans():
             GenColorImg(save_color, save_name)
             save_name = "./color_result/" + str(r) + "_" + str(g) + "_" + str(b) + ".png"
             GenColorImg(save_color, save_name)
-            color_total.remove(lightest_color)
-            color_r.remove(r)
-            color_g.remove(g)
-            color_b.remove(b)
+            del color_total[lightest_index]
+            del color_r[lightest_index]
+            del color_g[lightest_index]
+            del color_b[lightest_index]
+            #color_total.remove(lightest_color)
+            #color_r.remove(r)
+            #color_g.remove(g)
+            #color_b.remove(b)
 
         return (self.sequence_color)
         
