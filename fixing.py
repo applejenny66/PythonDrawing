@@ -104,9 +104,9 @@ class Fixing():
 
 
 if __name__ == "__main__":
-    K = 6
-    new = Fixing("./fixpoint/0_fix.png", K)
+    K = 298
+    new = Fixing("./painting/297.png", K)
     new.DrawStep()
     new.Simulatefix()
     new.printf()
-    new.Painting("./painting/5_paint.png")
+    new.Painting("./painting/297.png")

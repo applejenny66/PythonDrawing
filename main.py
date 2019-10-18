@@ -16,6 +16,7 @@ from gui import GUI
 from Kdecide import *
 
 def step0(filename):
+    #Kdecide.py
     ClearALL()
     filename = "1_2.png"
     count, r, g, b, color = colornumber(filename)
@@ -35,10 +36,12 @@ def step0(filename):
     K = Kdecided(simple_r, simple_g, simple_b)
     print ("K: ", K)
     printf()
+    return (K)
     
 
 
 def step1(filename, Kfilename, K, shape):
+    #preprocess.py
     Kprocess = Kmeans(filename, K)
     Kprocess.Kimg() # get the k means img
     print ("K means img generated.")
@@ -46,52 +49,33 @@ def step1(filename, Kfilename, K, shape):
     print ("sequence color: ", sequence_color)
     print ("length of sequence color: ", len(sequence_color))
 
-    count, r, g, b, color = colornumber(Kfilename) 
+    #count, r, g, b, color = colornumber(Kfilename) 
     # has a bug -> the number of color is different to the k of k means
-    print ("count of total color: ", count)
-    Kprocess.ColorSequence()
+    #print ("count of total color: ", count)
+    #Kprocess.ColorSequence()
     #Kprocess.Monitor()
     print ("simulated img generated.")
-    #Kprocess.printf()
-
-    drawpoints = Monitor(Kfilename, K, Kprocess.sequence_color, 0.4)
-    drawpoints.CheckLine()
-    try:
-        line_point = drawpoints.DrawLine()
-        print ("trying line")
-    except:
-        print ("no line points or there's problem for line points.")
-    try:
-        single_point = drawpoints.DrawPoints()
-        print ("trying point")
-    except:
-        print ("no single point or there's prpblem for single points.")
-    line_file_number, point_file_number = drawpoints.GenSequence(line_point, single_point)
-
-    painting = Painting(K, shape)
-    line_count = 0
-    count = 0
-    for i in range(0, line_file_number):
-        line_file_name = "./points/" + str(i) + "_line.csv"
-        line_count = painting.readfile_line(line_file_name)
-    for j in range(0, point_file_number):
-        point_file_name = "./points/" + str(j) + "_point.csv"
-        count = painting.readfile_points(point_file_name)
-    total_count = count - line_count ##### total_count 
-    file_count = 0
-    for filename in os.listdir("./painting/"):
-        file_count += 1
-    print ("file count: ", file_count)
-    final_painting_name = "./painting/" + str(file_count-1) + "_paint.png"
-
-    print ("final_painting_name: ", final_painting_name)
-
-    filename = painting.DectectImg(Kfilename, final_painting_name)
-    fixing = Fixing(filename, K)
-    fixing.DrawStep()
-    fixing.Simulatefix()
-    fixing.printf()
-    fixing.Painting(final_painting_name)
+    time.sleep(0.5)
+    #monitor.py
+    sorted_sequence_color = Kprocess.SortColor()
+    sorted_sequence_color = RemoveRedundant(sorted_sequence_color)
+    monit_name = "K_" + str(K) + "_" + filename #"K_298_1_2.png"
+    print ("monit_name: ", monit_name)
+    simulation = Monitor(monit_name, K, sorted_sequence_color, 0.4)
+    simulation.GenPoints()
+    simulation.SimulatedImg()
+    paint = Painting(K, shape)
+    color_list = paint.Painting()
+    comparename = "./painting/297.png"
+    paint.DectectImg(monit_name, comparename)
+    paint.Fixing("./difference/0.png")
+    print ("finished.")
+    time.sleep(0.5)
+    fix = Fixing("./painting/297.png", K)
+    fix.DrawStep()
+    fix.Simulatefix()
+    fix.printf()
+    fix.Painting("./painting/297.png")
 
 if __name__ == "__main__":
     filename = "1_2.png"
@@ -100,10 +84,6 @@ if __name__ == "__main__":
     K = step0(filename)
     Kfilename = "K_" + str(K) + "_" + filename
     print ("K means name: ", Kfilename)
-    
-    
-    #print ("color: ", color)
-    #fix_time = 0
     
     step1(filename, Kfilename, K, shape)
     #gui = GUI()

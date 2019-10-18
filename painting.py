@@ -40,13 +40,13 @@ class Painting():
                     else:
                         x = int(row[0])
                         y = int(row[1])
-                        for a in range(x-self.brush_size, x+self.brush_size):
-                            for b in range(y-self.brush_size, y+self.brush_size):
-                                if (a >= 0 and a <= self.size[0]-1):
-                                    if (b >= 0 and b <= self.size[1]-1):
-                                        img[a, b, 0] = r
-                                        img[a ,b ,1] = g
-                                        img[a ,b, 2] = b
+                        for xx in range(x-self.brush_size, x+self.brush_size):
+                            for yy in range(y-self.brush_size, y+self.brush_size):
+                                if (xx >= 0 and xx <= self.size[0]-1):
+                                    if (yy >= 0 and yy <= self.size[1]-1):
+                                        img[xx, yy, 0] = r
+                                        img[xx, yy, 1] = g
+                                        img[xx, yy, 2] = b
                 save_name = "./painting/" + str(i) + ".png"
                 cv.imwrite(save_name, img)
                 words = "finished " + str(i)
